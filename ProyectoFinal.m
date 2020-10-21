@@ -51,15 +51,7 @@ ind=find(label==i);
     end
 end
 
-%% rectangulos
-imshow(im_fil)
-stats=regionprops(im_fil,'BoundingBox');
-for k = 1 : length(stats)
-thisBB = stats(k).BoundingBox;
-rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],...
-'EdgeColor','g','LineWidth',1 )
-end
-
+%Acá puedo graficar devuelta los rectangulos
 %% separación individual
 for k = 1 : length(stats)
 thisBB = stats(k).BoundingBox;
