@@ -44,6 +44,8 @@ SE = strel('disk', 10);
 imc = imclose(imo, SE);
 SE = strel('disk', 5);
 imd = imdilate(imc, SE);
+SE = strel('disk', 2);
+imc = imclose(imo, SE);
 
 for j=1 : n
     for k=1 : m
