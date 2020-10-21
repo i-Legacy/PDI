@@ -4,10 +4,8 @@ clc; clear all;
 %% Imagen green channel
 im=imread('007source.jpg');
 im=imresize(im,0.25);
-img=im(:,:,2); %Me quedo con el canal G
-U=graythresh(im);
-imb=imbinarize(img,U);
-imb = imcomplement(imb);
+%img=im(:,:,2); %Me quedo con el canal G
+
 
 %% CMYK
 imcmyk = rgb2cmyk(im);
@@ -46,6 +44,7 @@ SE = strel('disk', 10);
 imc = imclose(imo, SE);
 SE = strel('disk', 5);
 imd = imdilate(imc, SE);
+
 for j=1 : n
     for k=1 : m
          if imd(j, k) == 1
@@ -75,9 +74,26 @@ imshow(result)
 title("resultado")
     
 %% borrado de las q son muy pequeñas
+% TERMINAR
 
+%% Print con imagen original
+result = im;
+sat = max(im(:));
+for j=1 : n
+    for k=1 : m
+         if imd(j, k) == 1
+             result(j, k, :) = sat;
+         end
+    end
+end
 
-
+figure 
+subplot(1, 2, 1)
+imshow(im)
+title("magenta")
+subplot(1, 2, 2)
+imshow(result)
+title("resultado")
 
 
 
