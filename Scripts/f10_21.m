@@ -2,7 +2,7 @@
 clc; clear all;
 
 %% Imagen green channel
-im=imread('007source.jpg');
+im=imread('001source.jpg');
 im=imresize(im,0.25);
 %img=im(:,:,2); %Me quedo con el canal G
 
@@ -65,6 +65,8 @@ for j=1 : n
     end
 end
 %% Print
+imwrite(result, 'Result.png');
+
 figure 
 subplot(1, 2, 1)
 imshow(magenta)
@@ -94,6 +96,7 @@ title("magenta")
 subplot(1, 2, 2)
 imshow(result)
 title("resultado")
+
 
 
 
