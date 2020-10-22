@@ -1,6 +1,7 @@
 im =imread('Result.png');
 im_bin = imbinarize(im);
-
+source = imread('001source.jpg');
+source = imresize(source, 0.25)
 
 %% Filtrado morfológico
 SE=strel('disk',4);
@@ -31,13 +32,16 @@ end
 
 %% rectangulos
 figure(2)
-imshow(im_fil)
+imshow(source)
 stats=regionprops(im_fil,'BoundingBox');
 for k = 1 : length(stats)
 thisBB = stats(k).BoundingBox;
 rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],...
 'EdgeColor','g','LineWidth',1 )
 end
+frame = getframe;
+[X, MAP]= frame2im(frame);
+imwrite(X, '001ConBoundingBox.jpg');
 
 %% separación individual
 for k = 1 : length(stats)
