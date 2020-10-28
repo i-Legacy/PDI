@@ -1,7 +1,7 @@
 im =imread('Result.png');
 im_bin = imbinarize(im);
 source = imread('001source.jpg');
-source = imresize(source, 0.25)
+source = imresize(source, 0.25);
 
 %% Filtrado morfológico
 SE=strel('disk',4);
@@ -44,6 +44,7 @@ frame = getframe;
 imwrite(X, '001ConBoundingBox.jpg');
 
 %% separación individual
+cont = 1;
 for k = 1 : length(stats)
 thisBB = stats(k).BoundingBox;
 %if(round(thisBB(4)+thisBB(2))<size(im_fil,1)&&round(thisBB(3)+thisBB(1))<size(im_fil,2)) %Así de paso estoy eliminando los que estan sobre el borde y salen cortados
@@ -58,11 +59,17 @@ if(round(thisBB(2)+thisBB(4)+1)<=size(im_fil,1)&&round(thisBB(3)+thisBB(1)+1)<=s
    SE=strel('disk',20);
    im_limpia=imclose(im_limpia,SE);
    
-   figure(3)
-   subplot(121)
-   imshow(mat);
-   subplot(122)
-   imshow(im_limpia);
+%    figure(3)
+%    subplot(121)
+%    imshow(mat);
+%    subplot(122)
+%    imshow(im_limpia);
+folder = 'E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Workplace\Limpias';
+
+FileName = fullfile(folder,sprintf('%d.jpg',cont));
+cont = cont +1;
+imwrite(double(im_limpia), FileName,'jpg');
    
 end
 end
+
