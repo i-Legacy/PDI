@@ -13,7 +13,6 @@ im_bin=imbinarize(im,U);
 SE=strel('disk',4);
 im_fil=imopen(im_bin,SE);
 
-
 % Elimino células ruido
 [label n]=bwlabel(im_fil,4);
 for i=1:n

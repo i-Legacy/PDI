@@ -1,75 +1,66 @@
-im =imread('Result.png');
-im_bin = imbinarize(im);
-source = imread('001source.jpg');
-source = imresize(source, 0.25);
+%% Histograma Area 
+hist_area = histogram(AP(:, 1),'NumBins', size(AP, 1),'BinLimits',[0 max(AP(:, 1))]);
 
-%% Filtrado morfológico
-SE=strel('disk',4);
+    
+%% Histograma Perimetro 
+hist_per = histogram(AP(:, 2),'NumBins', size(AP, 1),'BinLimits',[0 max(AP(:, 2))]);
 
-im_fil=imopen(im_bin,SE);
+%% Histograma Circularity 
+Arr = (AP(:, 2) .^ 2) ./ (4 * pi * AP(:, 1));
+% circularity = (Perimeter .^ 2) ./ (4 * pi * area);
+APC = [AP Arr];
+hist_cir = histogram(APC(:, 3),'NumBins', size(AP, 1),'BinLimits',[0 max(APC(:, 3))]);
 
-figure(1)
-subplot(121)
-imshow(im_bin)
-subplot(122)
-imshow(im_fil)
+%% Resize
+%1580
+im = imresize(imread('001source.jpg'), 0.25);
+cr = imcrop(im);
+cr = imresize(cr, 6.5);
+% imshow(cr)
 
-%% rectangulos
-stats=regionprops(im_fil,'BoundingBox');
+
+%%
+im_elim=EliminarWBC(cr);
+[AP im_AP]=AreaPerimetro(im_elim);
+
+figure()
+stats=regionprops(im_AP,'BoundingBox');
+imshow(im_AP)
 for k = 1 : length(stats)
 thisBB = stats(k).BoundingBox;
 rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],...
 'EdgeColor','g','LineWidth',1 )
 end
-%% Elimino células ruido
-[label n]=bwlabel(im_fil,4);
-for i=1:n
-ind=find(label==i);
-    if(size(ind,1)<200) %defino un umbral empírico
-        im_fil(ind)=0;
-    end
-end
 
-%% rectangulos
-figure(2)
-imshow(source)
-stats=regionprops(im_fil,'BoundingBox');
+%%
+SE=strel('disk',30);
+imo=imopen(im_AP,SE);
+%espicularidad
+[AP im_AP]=AreaPerimetro_p(imo);
+
+
+figure()
+stats=regionprops(im_AP,'BoundingBox');
+imshow(im_AP)
 for k = 1 : length(stats)
 thisBB = stats(k).BoundingBox;
 rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],...
 'EdgeColor','g','LineWidth',1 )
 end
-frame = getframe;
-[X, MAP]= frame2im(frame);
-imwrite(X, '001ConBoundingBox.jpg');
 
-%% separación individual
-cont = 1;
-for k = 1 : length(stats)
-thisBB = stats(k).BoundingBox;
-%if(round(thisBB(4)+thisBB(2))<size(im_fil,1)&&round(thisBB(3)+thisBB(1))<size(im_fil,2)) %Así de paso estoy eliminando los que estan sobre el borde y salen cortados
-if(round(thisBB(2)+thisBB(4)+1)<=size(im_fil,1)&&round(thisBB(3)+thisBB(1)+1)<=size(im_fil,2)&&...
-       round(thisBB(2)-1)>=1 && round(thisBB(1)-1)>=1) 
-%mat=im_fil(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(3)+thisBB(1))); 
-   mat=im_fil(round(thisBB(2)-1):round(thisBB(4)+thisBB(2)+1),round(thisBB(1)-1):round(thisBB(3)+thisBB(1)+1));
-   
-   im_limpia=imclearborder(mat);%Limpio los bordes
-   
-   %Cierre de las células
-   SE=strel('disk',20);
-   im_limpia=imclose(im_limpia,SE);
-   
-%    figure(3)
-%    subplot(121)
-%    imshow(mat);
-%    subplot(122)
-%    imshow(im_limpia);
-folder = 'E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Workplace\Limpias';
+%% watershed
 
-FileName = fullfile(folder,sprintf('%d.jpg',cont));
-cont = cont +1;
-imwrite(double(im_limpia), FileName,'jpg');
-   
-end
-end
+L = watershed(cr)
+
+
+
+
+
+
+
+
+
+
+
+
 

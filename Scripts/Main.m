@@ -4,8 +4,9 @@
 %file=dir(filePattern);
 %filename=fullfile(file(p).folder,file(p).name);
 %im=imread(filename);
-
-im=imread('C:\Users\server\Desktop\PDI\ProyectoFinal\PDI\Imagenes\003source.jpg');
+clear all; clc;
+folder = 'E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Imagenes\001source.jpg' ;
+im=imread(folder);
 im_elim=EliminarWBC(im);
 [AP im_AP]=AreaPerimetro(im_elim);
 

@@ -1,15 +1,21 @@
+% imcmyk = rgb2cmyk(cr);
+% magenta = imcmyk(:, :, 2);
+% 
+% gmag=imgradient(magenta);
+
 im=imcomplement(im2double(rgb2gray(cr)));
-im=imclearborder(im)
+im=imclearborder(im);
 gmag=imgradient(im);
 
-SE=strel('disk',30);
-Ie=imerode(im,SE);
-Irec=imreconstruct(Ie,im);
+
+SE=strel('disk',25);
+Ie=imerode(magenta,SE);
+Irec=imreconstruct(Ie,magenta);
 figure
 subplot(121)
 imshow(Irec);
 subplot(122)
-imshow(im);
+imshow(magenta);
 
 %% -
 Iobrd = imdilate(Irec,SE);
@@ -18,7 +24,7 @@ Ilim = imcomplement(Ilim);
 subplot(121)
 imshow(Ilim)
 subplot(122)
-imshow(im);
+imshow(magenta);
 
 %% -
 fgm=imregionalmax(Ilim);
@@ -31,7 +37,7 @@ fgm3 = imerode(fgm2,se2);
 
 fgm4 = bwareaopen(fgm3,30);
 
-I2 = labeloverlay(im,fgm4);
+I2 = labeloverlay(magenta,fgm4);
 imshow(I2)
 %% -
 
@@ -65,7 +71,7 @@ imshow(im2)
 
 %Imprimo todo
 subplot(131)
-imshow(im)
+imshow(magenta)
 subplot(132)
 imshow(im1)
 subplot(133)
