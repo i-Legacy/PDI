@@ -2,7 +2,11 @@
 clc; clear all;
 
 %% Imagen green channel
+<<<<<<< Updated upstream:Scripts/f10_21.m
 im=imread('001source.jpg');
+=======
+im=imread('005source.jpg');
+>>>>>>> Stashed changes:f10_21.m
 im=imresize(im,0.25);
 %img=im(:,:,2); %Me quedo con el canal G
 
