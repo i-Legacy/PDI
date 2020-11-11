@@ -1,0 +1,33 @@
+im_AP_peg
+separar(im_AP_peg) {
+	crop(im_AP_peg)(k) { % for 
+		cropeo cada grupo pegado k crop_im_peg
+		conservar coordenadas en im_AP_peg
+		crop(im, return crop_im_peg)
+			return crop_im
+		CelPegadas(crop_im)
+			return crop_div
+		procesado(crop_div) 
+			borra ruido
+			borra bordes
+			return crop_procesado
+		}
+	unir crops
+	FE_filtro(crop_procesado)	
+		separar celulas en diferentes labels
+		calcular area
+		calcular perimetro
+		calcular excentricidad
+		filtrar las que no correspondan % area muy grande o muy chica
+		% matriz: tiene area, perimetro y excentricidad
+		% crop_label: tiene el crop de celulas separadas, labeleadas
+		return matriz, im_AP_separada
+}
+	
+	 
+	
+		
+		
+		
+	
+	

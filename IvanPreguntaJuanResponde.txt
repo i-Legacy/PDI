@@ -1,0 +1,3 @@
+Preguntas para juan
+1. De donde sale el 1.5 del umbral en la funcion "individuales"
+2. Por que hacesw el imclearborder DESPUES de hacer el bwlabel, en la funcion Preproc?
