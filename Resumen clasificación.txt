@@ -1,0 +1,9 @@
+Pasos a seguir para clasificar:
+	1) Calcular FR y otros descriptores para cada célula
+	2) Dividir estos datos en 90% (train) y 10% (test)
+	3) Usando SOLAMENTE train, hacer K-fold y calcular accuracy como el promedio del accuracy de los K modelos
+	4) finalmente, evaluar el modelo con test (usando para el modelo todos los datos(?)) y obtener el accuracy. 
+	5) comparar el accuracy de train con el de test. Si son similares, todo bien. Si son muy distintos, es porque hubo overfitting (si el accuracy de train es mayor al de test)
+	6) una vez obtenido el modelo, aplicarlo a las imágenes de todas las células y ver qué da, aunque ya no podemos saber cuantas estan bien clasificadas
+	7) Repetir 1) a 4) haciendo stepwise, es decir, tomando un descriptor y luego agregando otros, obteniendo para cada modelo un accuracy. Así, ver si los nuevos descriptores van
+		sumando accuracy o no, para hacer selección de variables.
