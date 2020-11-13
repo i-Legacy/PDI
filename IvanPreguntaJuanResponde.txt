@@ -1,3 +1,7 @@
 Preguntas para juan
 1. De donde sale el 1.5 del umbral en la funcion "individuales"
 2. Por que hacesw el imclearborder DESPUES de hacer el bwlabel, en la funcion Preproc?
+3. Por que usas un contador dentro del for en la funcion "FeaturesExtraction"?
+4. Por que le pasas el perimetro a la funcion "individuales"? (usas solo area)
+5. Como aseguras que el bwlabel() va a numerar las celulas en el mismo orden q el bounding box
+6. Por que haces dos for al final de todo? Osea, para que es el segundo?
