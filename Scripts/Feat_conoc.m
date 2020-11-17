@@ -10,7 +10,7 @@ ap(s1+s2+1:s1+s2+s3,4)=3;%otras
 
 %% Calculo circulares
 for p=1:s1
-folder='C:\Users\server\Desktop\PDI\ProyectoFinal\erythrocytesIDB1\individual cells\circular\'
+folder='E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\Version 2, erythrocytesIDB\erythrocytesIDB1\individual cells\circular'
 filePattern = fullfile(folder, '*.jpg');
 file=dir(filePattern);
 filename=fullfile(file(p).folder,file(p).name);
@@ -27,7 +27,7 @@ end
 
 %% Calculo elongadas
 for p=1:s2
-folder='C:\Users\server\Desktop\PDI\ProyectoFinal\erythrocytesIDB1\individual cells\elongated\'
+folder='E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\Version 2, erythrocytesIDB\erythrocytesIDB1\individual cells\elongated'
 filePattern = fullfile(folder, '*.jpg');
 file=dir(filePattern);
 filename=fullfile(file(p).folder,file(p).name);
@@ -43,7 +43,7 @@ ap(s1+p,1:3)=AP(1:3);
 
 %% Calculo otras
 for p=1:s3
-folder='C:\Users\server\Desktop\PDI\ProyectoFinal\erythrocytesIDB1\individual cells\other\'
+folder='E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\Version 2, erythrocytesIDB\erythrocytesIDB1\individual cells\other'
 filePattern = fullfile(folder, '*.jpg');
 file=dir(filePattern);
 filename=fullfile(file(p).folder,file(p).name);

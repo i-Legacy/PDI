@@ -1,4 +1,4 @@
-function [acc_dis, acc_tr, acc_nb , mdl_dis]=Modelo(feat)
+function [acc_dis, acc_tr, acc_nb , mdl_nb]=Modelo(feat)
 %recibe los descriptores geometricos y devuelve un vector con el accuracy
 %del K-fold y el accuracy del test, para ver si el modelo tiene o no
 %overfitting, calculado con tres modelos: discriminante lineal,arbol binario y Naive-Bayes.

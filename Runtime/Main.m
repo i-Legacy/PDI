@@ -1,6 +1,6 @@
 %% Imagen actual
-clear all; clc
-im = imread('E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Imagenes\001source.jpg');
+%clear all; clc
+im = imread('E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Imagenes\004source.jpg');
 
 %% Armo el clasificador en base a las ya clasificadas
 feat = Feat_conoc;
@@ -12,7 +12,6 @@ feat = Feat_conoc;
 [acc_El_dis, acc_El_tr, acc_El_nb, mdl_El] = Modelo([feat(:,2)./feat(:,3) feat(:,3)]); %Considerando solo elipsidad (FR/Ec)
 %Con la elipsidad anda peor, tiene peor accuracy que con los demás.
 %Acá vienen los demás modelos con otras features
-
 %% Explicacion
 % Primero separo en dos imagenes, im_APE_ind y im_APE_peg
 % Luego clasifico la  previo a separarlas, im_APE, y le agrego un indice
@@ -44,11 +43,11 @@ im_pre = Preproc(im_elim);
 
 %Separo entre las que estan juntas
 [Umin, Umax] = umbral(APE(:, 1));
-[im_APE_ind,im_APE_peg] = individuales(APE(:,1:2),im_APE, Umin, Umax);
+[im_APE_ind,im_APE_peg] = individuales(APE(:,1:2), im_APE, Umin, Umax);
 
 %% Clasifico las células individuales (que ya estan separadas)
 % clas_indiv=Clasificar(mdl_FR,4*pi*AP(:,1)./AP(:,2).^2); %Con FR solamente
-clas_indiv=Clasificar(mdl_FR_Ec,[4*pi*APE(:,1)./APE(:,2).^2 APE(:,3)]); %Con Fr+Ec
+clas_indiv=Clasificar(mdl_FR_Ec, [4*pi*APE(:,1)./APE(:,2).^2, APE(:,3)]); %Con Fr+Ec
 %Comparando a ojo las clasificaciones de ambos, funciona mejor el segundo,
 %ya que el primero clasifica algunas como C cuando en realidad son O,
 %mientras que esas mismas el segundo las clasifica como O (ver con imagen 5)
@@ -70,13 +69,11 @@ clas_indiv( ~any(clas_indiv,2), : ) = [];  %elimino filas que estan en 0
 
 %% Postprocesado
 [APE_sep, im_APE_sep] = separar(im_APE_peg, im, Umin, Umax);
-clas_sep = Clasificar(mdl_FR_Ec, [4*pi*APE_sep(:, 1)./APE_sep(:, 2).^2 APE_sep(:, 3)]); %Con Fr+Ec
+clas_sep = Clasificar(mdl_FR_Ec, [4*pi*APE_sep(:, 1)./APE_sep(:, 2).^2, APE_sep(:, 3)]); %Con Fr+Ec
 % Le agrego un indice en la primera columna
 clas_sep(:, 2) = clas_sep;
-tam = max(clas_indiv(:, 1));
 clas_sep(:, 1) = (1 : length(clas_sep)) + tam;
 % Concateno ambos clasificadores
-clas = [clas_indiv; clas_sep];
 % genero la imagen final de las celulas individuales
 im_APE_result = im_APE_ind + im_APE_sep;
 im_APE_result = logical(im_APE_result);
@@ -85,68 +82,55 @@ im_APE_result = logical(im_APE_result);
 figure(1)
 im_etiq=imresize(im,0.25);
 stats=regionprops(im_APE,'BoundingBox');
-for k = 1 : length(stats)
+stats2 = regionprops(im_APE_sep,'BoundingBox'); %%
+cont = 1;
+%for k = 1 : length(stats)
+for k = 1 : max(clas_sep(:, 1)) %%
     aux=find(clas_indiv(:,1)==k);
+    aux2=find(clas_sep(:,1)==k); %%
     if(isempty(aux)==0) %si la célula k no es de ninguna célula despegada
-thisBB = stats(k).BoundingBox;
-rec=im_etiq(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(1)+thisBB(3)),:);
-if(clas_indiv(aux,2)==1)
-    im_clas=insertText(rec,[1,1],'C','Fontsize',20,'BoxOpacity',0,'TextColor','white');
-elseif(clas_indiv(aux,2)==2)
-    im_clas=insertText(rec,[1,1],'E','Fontsize',20,'BoxOpacity',0,'TextColor','white');
-elseif(clas_indiv(aux,2)==3)
-    im_clas=insertText(rec,[1,1],'O','Fontsize',20,'BoxOpacity',0,'TextColor','white');
-end
-im_etiq(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(1)+thisBB(3)),:)=im_clas;
-end
-end
-imshow(im_etiq)
-
-for k = 1 : length(stats)
- aux=find(clas_indiv(:,1)==k);
- thisBB = stats(k).BoundingBox;
- if(isempty(aux)==0)
- rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],'EdgeColor','g','LineWidth',1 )
- else
- rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],'EdgeColor','r','LineWidth',1 )    
- end
-end
-
-%% Grafico todas juntas
-figure(2)
-im_etiq = imresize(im,0.25);
-stats = regionprops(im_APE_result, 'BoundingBox');
-for k = 1 : length(stats)
-    aux = find(clas(:, 1) == k); 
-    % Es necesario porque, en la columna uno, esta el indice.
-    % aunque vaya de menor a mayor, algunos indices fueron borrados porque
-    % Pertenecian a las celulas pegadas.
-    if(isempty(aux) == 0) %si la célula k no es de ninguna célula despegada
         thisBB = stats(k).BoundingBox;
-        X =round(thisBB(2)) : round(thisBB(4)+thisBB(2));
-        Y = round(thisBB(1)) : round(thisBB(1)+thisBB(3));
-        rec = im_etiq(X, Y, :);
-        if(clas(aux, 2) == 1)
-            im_clas = insertText(rec, [1, 1], 'C', 'Fontsize', 20, 'BoxOpacity', 0, 'TextColor', 'white');
-        elseif(clas(aux, 2) == 2)
-            im_clas = insertText(rec, [1, 1], 'E', 'Fontsize', 20, 'BoxOpacity', 0, 'TextColor', 'white');
-        elseif(clas(aux, 2) == 3)
-            im_clas = insertText(rec, [1, 1], 'O', 'Fontsize', 20, 'BoxOpacity', 0, 'TextColor', 'white');
+        rec=im_etiq(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(1)+thisBB(3)),:);
+        if(clas_indiv(aux,2)==1)
+            im_clas=insertText(rec,[1,1],'C','Fontsize',20,'BoxOpacity',0,'TextColor','white'); 
+        elseif(clas_indiv(aux,2)==2)
+            im_clas=insertText(rec,[1,1],'E','Fontsize',20,'BoxOpacity',0,'TextColor','white');
+        elseif(clas_indiv(aux,2)==3)
+            im_clas=insertText(rec,[1,1],'O','Fontsize',20,'BoxOpacity',0,'TextColor','white');
         end
-        im_etiq(X, Y, :)=im_clas;
+    elseif(isempty(aux2) == 0)
+        thisBB = stats2(cont).BoundingBox;
+        rec=im_etiq(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(1)+thisBB(3)),:);
+        if(clas_sep(aux2,2)==1)
+            im_clas=insertText(rec,[1,1],'C','Fontsize',20,'BoxOpacity',0,'TextColor','white'); 
+        elseif(clas_sep(aux2,2)==2)
+            im_clas=insertText(rec,[1,1],'E','Fontsize',20,'BoxOpacity',0,'TextColor','white');
+        elseif(clas_sep(aux2,2)==3)
+            im_clas=insertText(rec,[1,1],'O','Fontsize',20,'BoxOpacity',0,'TextColor','white');
+        end
+        cont = cont + 1;
     end
+    im_etiq(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(1)+thisBB(3)),:)=im_clas;
 end
+
 imshow(im_etiq)
-
-for k = 1 : length(stats)
-    aux = find(clas(:, 1) == k);
-    thisBB = stats(k).BoundingBox;
-    if(isempty(aux) == 0)
-    rectangle('Position', [thisBB(1), thisBB(2), thisBB(3), thisBB(4)], 'EdgeColor', 'g', 'LineWidth', 1 )
+% for k = 1 : length(stats)
+cont = 1;
+for k = 1 : max(clas_sep(:, 1)) %%
+    aux=find(clas_indiv(:,1)==k);
+    aux2=find(clas_sep(:,1)==k); %%
+    if (k <= max(clas_indiv(:, 1)))
+        thisBB = stats(k).BoundingBox;
     else
-    rectangle('Position', [thisBB(1), thisBB(2), thisBB(3), thisBB(4)], 'EdgeColor', 'r', 'LineWidth', 1 )    
+        thisBB2 = stats2(cont).BoundingBox;
     end
+    if(isempty(aux) == 0)
+        rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],'EdgeColor','g','LineWidth',1 );
+    elseif(isempty(aux2) == 0)
+        rectangle('Position', [thisBB2(1),thisBB2(2),thisBB2(3),thisBB2(4)],'EdgeColor','r','LineWidth',1 );
+        cont = cont + 1;
+    end
+%     else
+%         rectangle('Position', [thisBB(1),thisBB(2),thisBB(3),thisBB(4)],'EdgeColor','r','LineWidth',1 )    
+%     end
 end
-
-% Por ahi podemos hacer un Reclasificador para ver los q no estan
-% clasificados

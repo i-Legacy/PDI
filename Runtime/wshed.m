@@ -6,7 +6,7 @@ ero = logical(imerode(seg, se));
 s = regionprops(ero);
 tam = length(s);
 while(tam == 1)
-    k = k + 5;
+    k = k + 1;
     se = strel('disk', k);
     ero = imerode(ero, se);
     s = regionprops(ero);

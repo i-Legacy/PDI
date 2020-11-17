@@ -58,7 +58,7 @@ for k = 1 : length(stats)
     [label, n] = bwlabel(imdiv,4);
     for i=1:n
         ind=find(label==i);
-        if(size(ind,1) < Umin) %Ver bien este umbral
+        if(size(ind,1) < Umin) 
             imdiv(ind) = 0;
         end
     end
@@ -90,7 +90,7 @@ for k = 1 : length(stats)
     %     ancho = ancho * 0.25;
     %     alto = alto * 0.25;
 
-    %imshow(imdiv);
+    imshow(imdiv);
 
     %Ahora tengo que agregar el pedacito de imagen que recorté al crop final.
     %cropresultante(x:x+ancho,y:y+alto) = imdiv; (dicho informalmente)

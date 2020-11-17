@@ -27,7 +27,6 @@ for i=1:n
        im_pegadas(ind)=0;
    end
 end
-% OJO CON LAS CHIQUITAS (la mia)
  
 %size(unique(AP(:,1))
 end

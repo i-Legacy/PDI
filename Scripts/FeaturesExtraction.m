@@ -3,7 +3,7 @@ function [matriz,im_label]=FeaturesExtraction(im_fil)
 %y eccentricidad
 
 CC=bwconncomp(im_fil,4); %Para poder hacer los bounding-box con una 4 vecindad
-stats=regionprops(CC,'BoundingBox');
+stats=regionprops(CC,'BoundingBox'); % Left, Top, Width, Heigh
 
 im_label=bwlabel(im_fil,4);
 
@@ -31,8 +31,8 @@ for k = 1 : length(stats)
    im_eros=imerode(im_limpia,SE);
    contorno=im_limpia-im_eros;
    [fil col]=find(contorno==1);
-   y=fil(1); %Me quedo con un punto de inicio para el algoritmo de traceboundary
-   x=col(1);
+   y = fil(1); %Me quedo con un punto de inicio para el algoritmo de traceboundary
+   x = col(1);
    conto=bwtraceboundary(im_limpia,round([y,x]),'N');
    
    %Para graficar el contorno
@@ -46,7 +46,10 @@ for k = 1 : length(stats)
     
  %Eccentricidad
   stats_ec=regionprops(im_limpia,'Eccentricity');
+  % stats_ec=regionprops(im_limpia,'perimeter');
+  % stats_ec=regionprops(im_limpia,'area'); lmao
   matriz(cont,3)=stats_ec(1).Eccentricity;
+ 
   
   
    cont=cont+1;
