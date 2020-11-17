@@ -9,7 +9,7 @@ ap(s1+1:s1+s2,4)=2; %elongadas
 ap(s1+s2+1:s1+s2+s3,4)=3;%otras
 
 %% Calculo circulares
-folder='E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\Version 2, erythrocytesIDB\erythrocytesIDB1\individual cells\circular'
+folder='C:\Users\server\Desktop\PDI\ProyectoFinal\erythrocytesIDB1\individual cells\circular\';
 for p=1:s1
 filePattern = fullfile(folder, '*.jpg');
 file=dir(filePattern);
@@ -26,7 +26,7 @@ ap(p,1:3)=AP(1:3);
 end
 
 %% Calculo elongadas
-folder='E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\Version 2, erythrocytesIDB\erythrocytesIDB1\individual cells\elongated'
+folder='C:\Users\server\Desktop\PDI\ProyectoFinal\erythrocytesIDB1\individual cells\elongated\';
 for p=1:s2
 filePattern = fullfile(folder, '*.jpg');
 file=dir(filePattern);
@@ -42,7 +42,8 @@ ap(s1+p,1:3)=AP(1:3);
  end
 
 %% Calculo otras
-folder='E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\Version 2, erythrocytesIDB\erythrocytesIDB1\individual cells\other'
+% folder='E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\Version 2, erythrocytesIDB\erythrocytesIDB1\individual cells\other'
+folder='C:\Users\server\Desktop\PDI\ProyectoFinal\erythrocytesIDB1\individual cells\other\'
 for p=1:s3
 filePattern = fullfile(folder, '*.jpg');
 file=dir(filePattern);
@@ -73,6 +74,6 @@ feat(:,3)=ap(:,4);
 % [H,pvalue,W]=swtest(FR(1:s1),0.05)
 % [H,pvalue,W]=swtest(FR(s1+1:s1+s2))
 % [H,pvalue,W]=swtest(FR(s1+s2+1:s1+s2+s3))
-% %Según este test, la clase 1 y 3 no tienen distribución normal; habría que
-% %usar otro clasificador
-% %probar fitncb
+% %Según este test, la clase 1 y 3 no tienen distribución normal;
+% haciendo log(FR(1:s1)+1) tampoco se logra normalidad => no se podría usar
+% discriminante lineal

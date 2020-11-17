@@ -17,15 +17,6 @@ train=feat(ind(k+1:end),:);
 
 %Calculo el accuracy de K-fold
 K=5;
-
-%% Clasificador KNN
-mdl_knn=fitcknn(train(:,1:size(train,2)-1),train(:,size(train,2))); %Regla de Naive-Bayes
-
-cv_mdl_knn=crossval(mdl_knn,'KFold',K);
-acc_knn=1-kfoldLoss(cv_mdl_knn); %Accuracy de K-fold
-
-test_accuracy_knn=1-loss(mdl_knn,test(:,1:size(test,2)-1),test(:,size(test,2))); %Accuracy del test
-
 %% Discriminante lineal
 
 mdl_dis=fitcdiscr(train(:,1:size(train,2)-1),train(:,size(train,2))); %Discriminante lineal

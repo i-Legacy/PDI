@@ -1,13 +1,13 @@
 %% Imagen actual
 %clear all; clc
-im = imread('E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Imagenes\004source.jpg');
-
+% im = imread('E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Imagenes\004source.jpg');
+im=imread('C:\Users\server\Desktop\PDI\ProyectoFinal\PDI\Imagenes\001source.jpg');
 %% Armo el clasificador en base a las ya clasificadas
 feat = Feat_conoc;
 %Calculo los 2 accuracy del clasificador y el modelo, que luego se usará sobre las imágenes completas
-[acc_FR_dis, acc_FR_tr, acc_FR_nb, mdl_FR] = Modelo(feat(:,[1 3])); %Considerando solo FR
-[acc_Ec_dis, acc_Ec_tr, acc_Ec_nb, mdl_Ec] = Modelo(feat(:,[2 3])); %Considerando solo Ec (eccentricidad)
-[acc_FR_Ec_dis, acc_FR_Ec_tr, acc_FR_Ec_nb, mdl_FR_Ec] = Modelo(feat(:,1:3)); %Considerando ambos, FR y Ec. Este clasifica mejor (tiene mejor accuracy)
+[acc_FR_dis, acc_FR_tr, acc_FR_nb, mdl_FR_knn,mdl_FR_dis,mdl_FR_tr,mdl_FR_nb] = Modelo(feat(:,[1 3])); %Considerando solo FR
+[acc_Ec_dis, acc_Ec_tr, acc_Ec_nb, mdl_Ec_knn,mdl_Ec_dis,mdl_Ec_tr,mdl_Ec_nb] = Modelo(feat(:,[2 3])); %Considerando solo Ec (eccentricidad)
+[acc_FR_Ec_dis, acc_FR_Ec_tr, acc_FR_Ec_nb, mdl_FR_Ec_knn,mdl_FR_Ec_dis,mdl_FR_Ec_tr,mdl_FR_Ec_nb] = Modelo(feat(:,1:3)); %Considerando ambos, FR y Ec. Este clasifica mejor (tiene mejor accuracy)
 
 [acc_El_dis, acc_El_tr, acc_El_nb, mdl_El] = Modelo([feat(:,2)./feat(:,3) feat(:,3)]); %Considerando solo elipsidad (FR/Ec)
 %Con la elipsidad anda peor, tiene peor accuracy que con los demás.
@@ -47,7 +47,9 @@ im_pre = Preproc(im_elim);
 
 %% Clasifico las células individuales (que ya estan separadas)
 % clas_indiv=Clasificar(mdl_FR,4*pi*AP(:,1)./AP(:,2).^2); %Con FR solamente
-clas_indiv=Clasificar(mdl_FR_Ec, [4*pi*APE(:,1)./APE(:,2).^2, APE(:,3)]); %Con Fr+Ec
+% clas_indiv=Clasificar(mdl_FR_Ec, [4*pi*APE(:,1)./APE(:,2).^2, APE(:,3)]); %Con Fr+Ec
+clas_indiv=Ensamble( mdl_FR_Ec_knn,mdl_FR_Ec_dis,mdl_FR_Ec_tr,mdl_FR_Ec_nb,[feat(:,1:2) feat(:,3)],[4*pi*APE(:,1)./APE(:,2).^2, APE(:,3)]); %Con Fr+Ec, usando un ensamble
+
 %Comparando a ojo las clasificaciones de ambos, funciona mejor el segundo,
 %ya que el primero clasifica algunas como C cuando en realidad son O,
 %mientras que esas mismas el segundo las clasifica como O (ver con imagen 5)
@@ -69,7 +71,10 @@ clas_indiv( ~any(clas_indiv,2), : ) = [];  %elimino filas que estan en 0
 
 %% Postprocesado
 [APE_sep, im_APE_sep] = separar(im_APE_peg, im, Umin, Umax);
-clas_sep = Clasificar(mdl_FR_Ec, [4*pi*APE_sep(:, 1)./APE_sep(:, 2).^2, APE_sep(:, 3)]); %Con Fr+Ec
+% clas_sep = Clasificar(mdl_FR_Ec, [4*pi*APE_sep(:, 1)./APE_sep(:, 2).^2, APE_sep(:, 3)]); %Con Fr+Ec
+% clas_sep=Ensamble([feat(:,1:2) feat(:,3)],[4*pi*APE_sep(:,1)./APE_sep(:,2).^2, APE_sep(:,3)]);
+clas_sep=Ensamble(mdl_FR_Ec_knn,mdl_FR_Ec_dis,mdl_FR_Ec_tr,mdl_FR_Ec_nb,[feat(:,1:2) feat(:,3)],[4*pi*APE_sep(:,1)./APE_sep(:,2).^2, APE_sep(:,3)]); %Con Fr+Ec, usando un ensamble
+
 % Le agrego un indice en la primera columna
 clas_sep(:, 2) = clas_sep;
 clas_sep(:, 1) = (1 : length(clas_sep)) + tam;
@@ -79,7 +84,7 @@ im_APE_result = im_APE_ind + im_APE_sep;
 im_APE_result = logical(im_APE_result);
 
 %% Grafico la imagen ya clasificada
-figure(1)
+figure()
 im_etiq=imresize(im,0.25);
 stats=regionprops(im_APE,'BoundingBox');
 stats2 = regionprops(im_APE_sep,'BoundingBox'); %%

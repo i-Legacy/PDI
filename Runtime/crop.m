@@ -90,7 +90,7 @@ for k = 1 : length(stats)
     %     ancho = ancho * 0.25;
     %     alto = alto * 0.25;
 
-    imshow(imdiv);
+%     imshow(imdiv);
 
     %Ahora tengo que agregar el pedacito de imagen que recorté al crop final.
     %cropresultante(x:x+ancho,y:y+alto) = imdiv; (dicho informalmente)
