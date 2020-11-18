@@ -1,7 +1,7 @@
 %% Imagen actual
 %clear all; clc
 % im = imread('E:\Documentos\ING_BIOMEDICA\Cuarto Año\Segundo Cuatrimestre\Procesamiento Digital de Imágenes\TP_Final\Imagenes\004source.jpg');
-im=imread('C:\Users\server\Desktop\PDI\ProyectoFinal\PDI\Imagenes\003source.jpg');
+im=imread('C:\Users\server\Desktop\PDI\ProyectoFinal\PDI\Imagenes\001source.jpg');
 %% Armo el clasificador en base a las ya clasificadas
 feat = Feat_conoc;
 %Calculo los 2 accuracy del clasificador y el modelo, que luego se usará sobre las imágenes completas
@@ -97,21 +97,21 @@ for k = 1 : max(clas_sep(:, 1)) %%
         thisBB = stats(k).BoundingBox;
         rec=im_etiq(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(1)+thisBB(3)),:);
         if(clas_indiv(aux,2)==1)
-            im_clas=insertText(rec,[1,1],'C','Fontsize',round(20*thisBB(4)/35),'BoxOpacity',0,'TextColor','white'); 
+            im_clas=insertText(rec,[1,1],'C','Fontsize',20,'BoxOpacity',0,'TextColor','white'); 
         elseif(clas_indiv(aux,2)==2)
-            im_clas=insertText(rec,[1,1],'E','Fontsize',round(20*thisBB(4)/35),'BoxOpacity',0,'TextColor','white');
+            im_clas=insertText(rec,[1,1],'E','Fontsize',20,'BoxOpacity',0,'TextColor','white');
         elseif(clas_indiv(aux,2)==3)
-            im_clas=insertText(rec,[1,1],'O','Fontsize',round(20*thisBB(4)/35),'BoxOpacity',0,'TextColor','white');
+            im_clas=insertText(rec,[1,1],'O','Fontsize',20,'BoxOpacity',0,'TextColor','white');
         end
     elseif(isempty(aux2) == 0)
         thisBB = stats2(cont).BoundingBox;
         rec=im_etiq(round(thisBB(2)):round(thisBB(4)+thisBB(2)),round(thisBB(1)):round(thisBB(1)+thisBB(3)),:);
         if(clas_sep(aux2,2)==1)
-            im_clas=insertText(rec,[1,1],'C','Fontsize',round(20*thisBB(4)/35),'BoxOpacity',0,'TextColor','white'); 
+            im_clas=insertText(rec,[1,1],'C','Fontsize',20*thisBB(4)/28,'BoxOpacity',0,'TextColor','white'); 
         elseif(clas_sep(aux2,2)==2)
-            im_clas=insertText(rec,[1,1],'E','Fontsize',round(20*thisBB(4)/35),'BoxOpacity',0,'TextColor','white');
+            im_clas=insertText(rec,[1,1],'E','Fontsize',20*thisBB(4)/28,'BoxOpacity',0,'TextColor','white');
         elseif(clas_sep(aux2,2)==3)
-            im_clas=insertText(rec,[1,1],'O','Fontsize',round(20*thisBB(4)/35),'BoxOpacity',0,'TextColor','white');
+            im_clas=insertText(rec,[1,1],'O','Fontsize',20*thisBB(4)/28,'BoxOpacity',0,'TextColor','white');
         end
         cont = cont + 1;
     end
